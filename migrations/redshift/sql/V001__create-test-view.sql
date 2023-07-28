@@ -1,4 +1,4 @@
-create view sample_tables_vw as
+create view tables_vw as
 select distinct(id) table_id
 ,trim(datname)   db_name
 ,trim(nspname)   schema_name
