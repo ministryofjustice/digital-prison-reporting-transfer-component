@@ -1,0 +1,19 @@
+version: 2.1
+
+orbs:
+  reporting: ministryofjustice/hmpps-reporting@dev:d56dc8c806a13b1ab2fc12eb4ae2851b767a808d
+  
+workflows:
+  checkout-build-publish:
+    jobs:               
+      - reporting/aws_invoke_lambda:
+          function: dpr-test-flyway-function
+          is_mock: false
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              ignore: /.*/
+          context:
+            - hmpps-reporting-common
+            - hmpps-reporting-orb
