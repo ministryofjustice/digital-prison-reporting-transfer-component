@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:d56dc8c806a13b1ab2fc12eb4ae2851b767a808d
+  reporting: ministryofjustice/hmpps-reporting@dev:0eaa25571bac6eba58d5bb67661178478eef00ea
   
 workflows:
   checkout-build-publish:
@@ -9,6 +9,7 @@ workflows:
       - reporting/aws_invoke_lambda:
           function: dpr-test-flyway-function
           is_mock: false
+          ref: << pipeline.git.branch >><< pipeline.git.tag >>
           filters:
             branches:
               only: /.*/
