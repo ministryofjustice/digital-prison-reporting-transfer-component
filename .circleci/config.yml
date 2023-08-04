@@ -7,7 +7,7 @@ workflows:
   checkout-build-publish:
     jobs:               
       - reporting/aws_invoke_lambda:
-          function: dpr-test-flyway-function
+          function: dpr-transfer-component-function
           is_mock: false
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           filters:
