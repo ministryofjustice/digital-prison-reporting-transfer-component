@@ -26,11 +26,11 @@ parameters:
     type: boolean
     default: true
     description: Send notifications to Associated Jira
-  deploy_to_test:
+  test_ready:
     type: boolean
     default: true
     description: Deploy to Test Environment
-  deploy_to_preprod:
+  test_ready:
     type: boolean
     default: true
     description: Deploy to PreProd Environment
@@ -41,8 +41,8 @@ workflows:
       - reporting/aws_invoke_lambda:
           function: << pipeline.parameters.function >>
           is_mock: false
-          deploy_to_test: << pipeline.parameters.deploy_to_test >>
-          deploy_to_preprod: << pipeline.parameters.deploy_to_preprod >>          
+          deploy_to_test: << pipeline.parameters.test_ready >>
+          deploy_to_preprod: << pipeline.parameters.test_ready >>          
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           filters:
             branches:
