@@ -1,19 +1,91 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:d56dc8c806a13b1ab2fc12eb4ae2851b767a808d
-  
+  reporting: ministryofjustice/hmpps-reporting@1.0.28
+  slack: circleci/slack@4.12.5
+
+parameters:
+  function:
+    type: string
+    default: "dpr-transfer-component-function"
+  alerts_channel:
+    type: string
+    default: "dpr_cicd_alerts"
+  approval_channel:
+    type: string
+    default: "dpr_cicd_approvals"
+  release_ready:
+    type: boolean
+    default: true
+    description: When true, Releases artifacts to Live
+  notify_slack:
+    type: boolean
+    default: true
+    description: Send notifications to Slack
+  notify_jira:
+    type: boolean
+    default: true
+    description: Send notifications to Associated Jira
+  test_ready:
+    type: boolean
+    default: true
+    description: Deploy to Test Environment
+  preprod_ready:
+    type: boolean
+    default: true
+    description: Deploy to PreProd Environment
+
 workflows:
   checkout-build-publish:
     jobs:               
       - reporting/aws_invoke_lambda:
-          function: dpr-test-flyway-function
+          function: << pipeline.parameters.function >>
           is_mock: false
+          test_ready: << pipeline.parameters.test_ready >>
+          preprod_ready: << pipeline.parameters.preprod_ready >>          
+          ref: << pipeline.git.branch >><< pipeline.git.tag >>
+          notify_slack: << pipeline.parameters.notify_slack >>
           filters:
             branches:
               only: /.*/
             tags:
               ignore: /.*/
+          context:
+            - hmpps-reporting-common
+            - hmpps-reporting-orb
+      - slack/on-hold:
+          channel: << pipeline.parameters.approval_channel >>
+          filters:
+            branches:
+              only: main
+            tags:
+              ignore: /.*/
+          requires: [reporting/aws_invoke_lambda]
+          context:
+            - hmpps-reporting-common
+      - pause_workflow:
+          channel: << pipeline.parameters.approval_channel >>
+          type: approval
+          filters:
+            branches:
+              only: main
+            tags:
+              ignore: /.*/
+          requires: [slack/on-hold]
+          context:
+            - hmpps-reporting-common
+      - reporting/invoke_lambda_live:
+          function: << pipeline.parameters.function >>
+          ref: << pipeline.git.branch >><< pipeline.git.tag >>
+          release_ready: << pipeline.parameters.release_ready >>
+          notify_slack: << pipeline.parameters.notify_slack >>
+          channel: dpr_release_alerts       
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              ignore: /.*/
+          requires: [pause_workflow]    
           context:
             - hmpps-reporting-common
             - hmpps-reporting-orb
