@@ -84,6 +84,7 @@ workflows:
               only: /.*/
             tags:
               ignore: /.*/
+          requires: [pause_workflow]    
           context:
             - hmpps-reporting-common
             - hmpps-reporting-orb
