@@ -30,7 +30,7 @@ parameters:
     type: boolean
     default: true
     description: Deploy to Test Environment
-  test_ready:
+  preprod_ready:
     type: boolean
     default: true
     description: Deploy to PreProd Environment
@@ -41,8 +41,8 @@ workflows:
       - reporting/aws_invoke_lambda:
           function: << pipeline.parameters.function >>
           is_mock: false
-          deploy_to_test: << pipeline.parameters.test_ready >>
-          deploy_to_preprod: << pipeline.parameters.test_ready >>          
+          test_ready: << pipeline.parameters.test_ready >>
+          preprod_ready: << pipeline.parameters.preprod_ready >>          
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           filters:
             branches:
