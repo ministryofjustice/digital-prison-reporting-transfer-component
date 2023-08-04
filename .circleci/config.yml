@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:7f4b20e0b8dfa77d23fd7aaed5ca335f449919d5
+  reporting: ministryofjustice/hmpps-reporting@dev:135c0690d66604da89ff65a54f556f666c29c6cb
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -44,6 +44,7 @@ workflows:
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>          
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
+          notify_slack: << pipeline.parameters.notify_slack >>
           filters:
             branches:
               only: /.*/
