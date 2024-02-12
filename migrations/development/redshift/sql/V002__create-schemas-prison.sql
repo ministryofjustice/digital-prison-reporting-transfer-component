@@ -6,7 +6,7 @@
 -- be automatically refreshed.
 --
 -- =================================================================
-CREATE EXTERNAL SCHEMA prisons from data catalog
+CREATE EXTERNAL SCHEMA IF NOT EXISTS prisons from data catalog
 database 'prisons'
 iam_role 'arn:aws:iam::771283872747:role/dpr-redshift-spectrum-role';
 
