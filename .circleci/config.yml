@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:cb101fde77d68bcbeb8efd7e5b63e042d5ee1c32
+  reporting: ministryofjustice/hmpps-reporting@dev:45954c525b1d80a662b81add04b74de553e3f241
   slack: circleci/slack@4.12.5
 
 parameters:
