@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:32a95c23c4573dc76bd289b4e3834d6555e781d2
+  reporting: ministryofjustice/hmpps-reporting@dev:f52f0136d949d9df5385c33e6c14b6ebf96c1a78
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -32,7 +32,8 @@ workflows:
           function: << pipeline.parameters.function >>
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
-          preprod_ready: << pipeline.parameters.preprod_ready >>          
+          preprod_ready: << pipeline.parameters.preprod_ready >>
+          extraArgs: ', "outOfOrder": true'
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           notify_slack: << pipeline.parameters.notify_slack >>
           filters:
