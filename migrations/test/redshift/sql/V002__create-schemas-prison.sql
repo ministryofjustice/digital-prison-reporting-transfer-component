@@ -6,7 +6,7 @@
 -- be automatically refreshed.
 --
 -- =================================================================
-CREATE EXTERNAL SCHEMA prisons from data catalog
+CREATE EXTERNAL SCHEMA IF NOT EXISTS prisons from data catalog
 database 'prisons'
 iam_role 'arn:aws:iam::203591025782:role/dpr-redshift-spectrum-role';
 
@@ -14,7 +14,7 @@ iam_role 'arn:aws:iam::203591025782:role/dpr-redshift-spectrum-role';
 -- =================================================================
 -- Drop the schema if exists
 -- =================================================================
-DROP SCHEMA IF EXISTS domain;
+DROP SCHEMA IF EXISTS domain CASCADE;
 
 -- =================================================================
 -- Create a schema space for domain
