@@ -33,7 +33,7 @@ workflows:
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>
-          extraArgs: ', "outOfOrder": true'
+          flywayArgs: ', "outOfOrder": true'
           skip_flyway_validate: true
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           notify_slack: << pipeline.parameters.notify_slack >>
