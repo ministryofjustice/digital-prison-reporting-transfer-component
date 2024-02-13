@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:c536bbef9f199134f8a53653e4984645f504310f
+  reporting: ministryofjustice/hmpps-reporting@dev:466ea28cc1fd9eca16e075dda4d647c5acefe12d
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -34,6 +34,7 @@ workflows:
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>
           extraArgs: ', "outOfOrder": true'
+          skip_flyway_validate: true
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           notify_slack: << pipeline.parameters.notify_slack >>
           filters:
