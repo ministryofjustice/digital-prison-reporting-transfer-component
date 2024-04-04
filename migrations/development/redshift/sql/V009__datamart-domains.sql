@@ -2,7 +2,7 @@
 -- adjudication_hearing
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.adjudication_hearing CASCADE;
+DROP VIEW IF EXISTS datamart.adjudication_hearing;
 
 CREATE OR REPLACE VIEW datamart.adjudication_hearing AS 
 WITH aiparty AS (SELECT * FROM prisons.nomis_agency_incident_parties)
@@ -23,7 +23,7 @@ WITH NO SCHEMA BINDING;
 -- establishment_establishment
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.establishment_establishment CASCADE;
+DROP VIEW IF EXISTS datamart.establishment_establishment;
 
 CREATE OR REPLACE VIEW datamart.establishment_establishment AS 
 
@@ -38,7 +38,7 @@ WITH NO SCHEMA BINDING;
 -- establishment_living_unit
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.establishment_living_unit CASCADE;
+DROP VIEW IF EXISTS datamart.establishment_living_unit;
 
 CREATE OR REPLACE VIEW datamart.establishment_living_unit AS 
 
@@ -57,7 +57,7 @@ WITH NO SCHEMA BINDING;
 -- movement_movement
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.movement_movement CASCADE;
+DROP VIEW IF EXISTS datamart.movement_movement;
 
 CREATE OR REPLACE VIEW datamart.movement_movement AS 
 WITH origin_location AS (SELECT * from prisons.nomis_agency_locations),
@@ -88,7 +88,7 @@ WITH NO SCHEMA BINDING;
 -- movement_schedule
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.movement_schedule CASCADE;
+DROP VIEW IF EXISTS datamart.movement_schedule;
 
 CREATE OR REPLACE VIEW datamart.movement_schedule AS 
 WITH origin_location AS (SELECT * from prisons.nomis_agency_locations),
@@ -138,7 +138,7 @@ WITH NO SCHEMA BINDING;
 -- movement_release
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.movement_release CASCADE;
+DROP VIEW IF EXISTS datamart.movement_release;
 
 CREATE OR REPLACE VIEW datamart.movement_release AS 
 WITH mov_status AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='EVENT_STS'),
@@ -176,7 +176,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_prisoner
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_prisoner CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_prisoner;
 
 CREATE OR REPLACE VIEW datamart.prisoner_prisoner AS 
 WITH ofrel AS (SELECT row_number() over (partition by prisons.nomis_offender_profile_details.offender_book_id) as rn, prisons.nomis_offender_profile_details.offender_book_id, prisons.nomis_offender_profile_details.profile_code, prisons.nomis_profile_codes.description FROM prisons.nomis_offender_profile_details LEFT JOIN prisons.nomis_profile_codes ON prisons.nomis_profile_codes.profile_code=prisons.nomis_offender_profile_details.profile_code where prisons.nomis_offender_profile_details.profile_type='RELF'),
@@ -255,7 +255,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_profile
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_profile CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_profile;
 
 CREATE OR REPLACE VIEW datamart.prisoner_profile AS 
 WITH ofrel AS (SELECT row_number() over (partition by prisons.nomis_offender_profile_details.offender_book_id) as rn, prisons.nomis_offender_profile_details.offender_book_id, prisons.nomis_offender_profile_details.profile_code, prisons.nomis_profile_codes.description FROM prisons.nomis_offender_profile_details LEFT JOIN prisons.nomis_profile_codes ON prisons.nomis_profile_codes.profile_code=prisons.nomis_offender_profile_details.profile_code where prisons.nomis_offender_profile_details.profile_type='RELF'),
@@ -363,7 +363,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_status
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_status CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_status;
 
 CREATE OR REPLACE VIEW datamart.prisoner_status AS 
 WITH ofims AS (SELECT offender_book_id, description, latest_status FROM prisons.nomis_offender_imprison_statuses JOIN prisons.nomis_imprisonment_statuses ON prisons.nomis_offender_imprison_statuses.imprisonment_status=prisons.nomis_imprisonment_statuses.imprisonment_status WHERE latest_status='Y')
@@ -385,7 +385,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_property
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_property CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_property;
 
 CREATE OR REPLACE VIEW datamart.prisoner_property AS 
 
@@ -409,7 +409,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_alert
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_alert CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_alert;
 
 CREATE OR REPLACE VIEW datamart.prisoner_alert AS 
 WITH acode AS (SELECT * from prisons.nomis_reference_codes WHERE datamart='ALERT_CODE'),
@@ -434,7 +434,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_offence
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_offence CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_offence;
 
 CREATE OR REPLACE VIEW datamart.prisoner_offence AS 
 WITH acode AS (SELECT * from prisons.nomis_reference_codes WHERE datamart='ALERT_CODE'),
@@ -458,7 +458,7 @@ WITH NO SCHEMA BINDING;
 -- prisoner_sentence
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.prisoner_sentence CASCADE;
+DROP VIEW IF EXISTS datamart.prisoner_sentence;
 
 CREATE OR REPLACE VIEW datamart.prisoner_sentence AS 
 WITH latest_sentence AS (SELECT *, row_number() over (partition by offender_book_id order by end_date desc) as rn from prisons.nomis_offender_sentence_terms)
@@ -494,7 +494,7 @@ WITH NO SCHEMA BINDING;
 -- reference_address
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.reference_address CASCADE;
+DROP VIEW IF EXISTS datamart.reference_address;
 
 CREATE OR REPLACE VIEW datamart.reference_address AS 
 
@@ -520,7 +520,7 @@ WITH NO SCHEMA BINDING;
 -- activity_wait_list
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.activity_wait_list CASCADE;
+DROP VIEW IF EXISTS datamart.activity_wait_list;
 
 CREATE OR REPLACE VIEW datamart.activity_wait_list AS 
 
@@ -536,7 +536,7 @@ WITH NO SCHEMA BINDING;
 -- visit_visit
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.visit_visit CASCADE;
+DROP VIEW IF EXISTS datamart.visit_visit;
 
 CREATE OR REPLACE VIEW datamart.visit_visit AS 
 
@@ -556,7 +556,7 @@ WITH NO SCHEMA BINDING;
 -- court_event
 -- =================================================================
 
-DROP VIEW IF EXISTS datamart.court_event CASCADE;
+DROP VIEW IF EXISTS datamart.court_event;
 
 CREATE OR REPLACE VIEW datamart.court_event AS 
 WITH destination_location AS (SELECT * from prisons.nomis_agency_locations),
