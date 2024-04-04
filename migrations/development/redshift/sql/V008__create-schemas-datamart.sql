@@ -14,7 +14,7 @@ iam_role 'arn:aws:iam::771283872747:role/dpr-redshift-spectrum-role';
 -- =================================================================
 -- Drop the schema if exists
 -- =================================================================
-DROP SCHEMA IF EXISTS datamart;
+DROP SCHEMA IF EXISTS datamart DROP EXTERNAL DATABASE CASCADE;
 
 -- =================================================================
 -- Create a schema space for datamart
