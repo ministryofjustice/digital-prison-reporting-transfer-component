@@ -578,5 +578,3 @@ FROM prisons.nomis_court_events events
 LEFT JOIN destination_location ON events.agy_loc_id=destination_location.agy_loc_id
 LEFT JOIN evt_subtype ON events.court_event_type=evt_subtype.code
 WITH NO SCHEMA BINDING;
-
-
