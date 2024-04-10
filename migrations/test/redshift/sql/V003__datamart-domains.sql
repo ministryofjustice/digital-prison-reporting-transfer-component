@@ -93,9 +93,9 @@ DROP VIEW IF EXISTS datamart.movement_schedule;
 CREATE OR REPLACE VIEW datamart.movement_schedule AS 
 WITH origin_location AS (SELECT * from prisons.nomis_agency_locations),
 destination_location AS (SELECT * from prisons.nomis_agency_locations),
-mov_status AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='EVENT_STS'),
-mov_type AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='EVENT_TYPE'),
-mov_subtype AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='INT_SCH_RSN')
+mov_status AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='EVENT_STS'),
+mov_type AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='EVENT_TYPE'),
+mov_subtype AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='INT_SCH_RSN')
 SELECT mov.event_id AS id,
 mov.offender_book_id AS prisoner_id,
 mov.event_date AS date,
@@ -123,7 +123,7 @@ LEFT JOIN origin_location ON mov.agy_loc_id=origin_location.agy_loc_id
 LEFT JOIN destination_location ON mov.to_agy_loc_id=destination_location.agy_loc_id
 LEFT JOIN mov_status ON mov.event_status=mov_status.code
 LEFT JOIN mov_type ON mov.event_type=mov_type.code
-LEFT JOIN mov_subtype ON mov.event_sub_type=mov_subtype.code AND mov_subtype.datamart=CASE 
+LEFT JOIN mov_subtype ON mov.event_sub_type=mov_subtype.code AND mov_subtype.domain=CASE
 WHEN mov.event_class='INT_MOV' THEN
     'INT_SCH_RSN'
 WHEN mov.event_class='EXT_MOV' THEN
@@ -141,9 +141,9 @@ WITH NO SCHEMA BINDING;
 DROP VIEW IF EXISTS datamart.movement_release;
 
 CREATE OR REPLACE VIEW datamart.movement_release AS 
-WITH mov_status AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='EVENT_STS'),
-mov_type AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='MOVE_TYPE'),
-mov_subtype AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='MOVE_RSN')
+WITH mov_status AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='EVENT_STS'),
+mov_type AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='MOVE_TYPE'),
+mov_subtype AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='MOVE_RSN')
 SELECT mov.event_id AS id,
 mov.offender_book_id AS prisoner_id,
 mov.release_date AS date,
@@ -184,12 +184,12 @@ pnc AS (SELECT *, row_number() over (partition by offender_id order by offender_
 prim_lang AS (SELECT * FROM prisons.nomis_offender_languages WHERE language_type='PRIM'),
 sec_lang AS (SELECT *, row_number() over (partition by offender_book_id) as rn  FROM prisons.nomis_offender_languages WHERE language_type='SEC'),
 latest_sentence AS (SELECT *, row_number() over (partition by offender_book_id order by end_date desc) as rn from prisons.nomis_offender_sentence_terms),
-ethnicity_datamart AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='ETHNICITY'),
+ethnicity_domain AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='ETHNICITY'),
 nationality_info AS (select row_number() over (partition by offender_book_id) as rn, offender_book_id, prisons.nomis_profile_codes.profile_code as code, prisons.nomis_profile_codes.description
 from prisons.nomis_offender_profile_details
 left join prisons.nomis_profile_codes on prisons.nomis_offender_profile_details.profile_code=prisons.nomis_profile_codes.profile_code
 where prisons.nomis_offender_profile_details.profile_type='NAT'),
-gender_datamart AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='SEX'),
+gender_domain AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='SEX'),
 diet_info AS (select row_number() over (partition by offender_book_id) as rn, offender_book_id, prisons.nomis_profile_codes.profile_code as code, prisons.nomis_profile_codes.description
 from prisons.nomis_offender_profile_details
 left join prisons.nomis_profile_codes on prisons.nomis_offender_profile_details.profile_code=prisons.nomis_profile_codes.profile_code
@@ -216,11 +216,11 @@ o.birth_date AS date_of_birth,
 DATEDIFF(hour,o.birth_date,CURRENT_DATE)/8766 AS age,
 o.birth_place AS birth_place,
 o.sex_code AS gender_code,
-gender_datamart.description AS gender,
+gender_domain.description AS gender,
 CASE WHEN o.race_code='W8' then 'W3'
 WHEN o.race_code='O1' then 'A4'
 ELSE o.race_code END AS ethnicity_code,
-ethnicity_datamart.description AS ethnicity,
+ethnicity_domain.description AS ethnicity,
 prim_lang.language_code AS primary_language,
 sec_lang.language_code AS secondary_language,
 pnc.identifier AS pnc,
@@ -242,9 +242,9 @@ LEFT JOIN pnc ON pnc.offender_id = o.offender_id AND pnc.rn=1
 LEFT JOIN prim_lang ON prim_lang.offender_book_id=ob.offender_book_id
 LEFT JOIN sec_lang ON sec_lang.offender_book_id=ob.offender_book_id AND sec_lang.rn=1
 LEFT JOIN latest_sentence ON latest_sentence.offender_book_id=ob.offender_book_id AND latest_sentence.rn=1
-LEFT JOIN ethnicity_datamart ON o.race_code=ethnicity_datamart.code
+LEFT JOIN ethnicity_domain ON o.race_code=ethnicity_domain.code
 LEFT JOIN nationality_info ON ob.offender_book_id=nationality_info.offender_book_id AND nationality_info.rn=1
-LEFT JOIN gender_datamart ON o.sex_code=gender_datamart.code
+LEFT JOIN gender_domain ON o.sex_code=gender_domain.code
 LEFT JOIN diet_info ON ob.offender_book_id=diet_info.offender_book_id AND diet_info.rn=1
 LEFT JOIN latest_category ON latest_category.offender_book_id=ob.offender_book_id AND latest_category.rn=1
 LEFT JOIN sexo_info ON ob.offender_book_id=sexo_info.offender_book_id AND sexo_info.rn=1
@@ -267,12 +267,12 @@ horef AS (SELECT * FROM prisons.nomis_offender_identifiers),
 prim_lang AS (SELECT * FROM prisons.nomis_offender_languages WHERE language_type='PRIM'),
 sec_lang AS (SELECT * FROM prisons.nomis_offender_languages WHERE language_type='SEC'),
 latest_sentence AS (SELECT *, row_number() over (partition by offender_book_id order by end_date desc) as rn from prisons.nomis_offender_sentence_terms),
-ethnicity_datamart AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='ETHNICITY'),
+ethnicity_domain AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='ETHNICITY'),
 nationality_info AS (select offender_book_id, prisons.nomis_profile_codes.profile_code as code, prisons.nomis_profile_codes.description
 from prisons.nomis_offender_profile_details
 left join prisons.nomis_profile_codes on prisons.nomis_offender_profile_details.profile_code=prisons.nomis_profile_codes.profile_code
 where prisons.nomis_offender_profile_details.profile_type='NAT'),
-gender_datamart AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='SEX'),
+gender_domain AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='SEX'),
 diet_info AS (select offender_book_id, prisons.nomis_profile_codes.profile_code as code, prisons.nomis_profile_codes.description
 from prisons.nomis_offender_profile_details
 left join prisons.nomis_profile_codes on prisons.nomis_offender_profile_details.profile_code=prisons.nomis_profile_codes.profile_code
@@ -302,11 +302,11 @@ o.birth_date AS date_of_birth,
 DATEDIFF(hour,o.birth_date,CURRENT_DATE)/8766 AS age,
 o.birth_place AS birth_place,
 o.sex_code AS gender_code,
-gender_datamart.description AS gender,
+gender_domain.description AS gender,
 CASE WHEN o.race_code='W8' then 'W3'
 WHEN o.race_code='O1' then 'A4'
 ELSE o.race_code END AS ethnicity_code,
-ethnicity_datamart.description AS ethnicity,
+ethnicity_domain.description AS ethnicity,
 prim_lang.language_code AS primary_language,
 sec_lang.language_code AS secondary_language,
 pnc.identifier AS pnc,
@@ -347,9 +347,9 @@ LEFT JOIN horef ON horef.offender_id = ob.offender_id AND horef.identifier_type=
 LEFT JOIN prim_lang ON prim_lang.offender_book_id=ob.offender_book_id
 LEFT JOIN sec_lang ON sec_lang.offender_book_id=ob.offender_book_id
 LEFT JOIN latest_sentence ON latest_sentence.offender_book_id=ob.offender_book_id AND latest_sentence.rn=1
-LEFT JOIN ethnicity_datamart ON o.race_code=ethnicity_datamart.code
+LEFT JOIN ethnicity_domain ON o.race_code=ethnicity_domain.code
 LEFT JOIN nationality_info ON ob.offender_book_id=nationality_info.offender_book_id
-LEFT JOIN gender_datamart ON o.sex_code=gender_datamart.code
+LEFT JOIN gender_domain ON o.sex_code=gender_domain.code
 LEFT JOIN diet_info ON ob.offender_book_id=diet_info.offender_book_id
 LEFT JOIN latest_category ON latest_category.offender_book_id=ob.offender_book_id AND latest_category.rn=1
 LEFT JOIN sexo_info ON ob.offender_book_id=sexo_info.offender_book_id
@@ -412,8 +412,8 @@ WITH NO SCHEMA BINDING;
 DROP VIEW IF EXISTS datamart.prisoner_alert;
 
 CREATE OR REPLACE VIEW datamart.prisoner_alert AS 
-WITH acode AS (SELECT * from prisons.nomis_reference_codes WHERE datamart='ALERT_CODE'),
-acat AS (SELECT * FROM prisons.nomis_reference_codes WHERE datamart='ALERT')
+WITH acode AS (SELECT * from prisons.nomis_reference_codes WHERE domain='ALERT_CODE'),
+acat AS (SELECT * FROM prisons.nomis_reference_codes WHERE domain='ALERT')
 SELECT (alert.offender_book_id || '.' || alert.alert_seq) AS id,
 alert.offender_book_id AS prisoner_id,
 alert.alert_date AS date,
@@ -437,8 +437,8 @@ WITH NO SCHEMA BINDING;
 DROP VIEW IF EXISTS datamart.prisoner_offence;
 
 CREATE OR REPLACE VIEW datamart.prisoner_offence AS 
-WITH acode AS (SELECT * from prisons.nomis_reference_codes WHERE datamart='ALERT_CODE'),
-acat AS (SELECT * FROM prisons.nomis_reference_codes WHERE datamart='ALERT')
+WITH acode AS (SELECT * from prisons.nomis_reference_codes WHERE domain='ALERT_CODE'),
+acat AS (SELECT * FROM prisons.nomis_reference_codes WHERE domain='ALERT')
 SELECT (alert.offender_book_id || '.' || alert.alert_seq) AS id,
 alert.alert_date AS date,
 alert.alert_type AS type,
@@ -560,7 +560,7 @@ DROP VIEW IF EXISTS datamart.court_event;
 
 CREATE OR REPLACE VIEW datamart.court_event AS 
 WITH destination_location AS (SELECT * from prisons.nomis_agency_locations),
-evt_subtype AS (SELECT code, datamart, description from prisons.nomis_reference_codes where datamart='MOVE_RSN')
+evt_subtype AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain='MOVE_RSN')
 SELECT events.event_id AS id,
 events.case_id AS case_id,
 events.offender_book_id AS prisoner_id,
