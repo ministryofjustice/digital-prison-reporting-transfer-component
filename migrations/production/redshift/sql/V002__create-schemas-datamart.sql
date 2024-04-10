@@ -14,13 +14,13 @@ iam_role 'arn:aws:iam::004723187462:role/dpr-redshift-spectrum-role';
 -- =================================================================
 -- Drop the schema if exists
 -- =================================================================
-DROP SCHEMA IF EXISTS domain CASCADE;
+DROP SCHEMA IF EXISTS datamart CASCADE;
 
 -- =================================================================
--- Create a schema space for domain
--- All domain views will be deployed here on a domain_table basis
+-- Create a schema space for datamart
+-- All datamart views will be deployed here on a domain_table basis
 --
 -- =================================================================
 
-CREATE SCHEMA IF NOT EXISTS domain QUOTA UNLIMITED;
-GRANT USAGE ON SCHEMA domain TO dpruser;
+CREATE SCHEMA IF NOT EXISTS datamart QUOTA UNLIMITED;
+GRANT USAGE ON SCHEMA datamart TO dpruser;
