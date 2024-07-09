@@ -45,3 +45,19 @@ workflows:
           context:
             - hmpps-reporting-common
             - hmpps-reporting-orb
+      - reporting/aws_invoke_lambda:
+          function: dpr-transfer-component-operational-datastore-function
+          is_mock: false
+          test_ready: << pipeline.parameters.test_ready >>
+          preprod_ready: << pipeline.parameters.preprod_ready >>
+          skip_flyway_validate: true
+          ref: << pipeline.git.branch >><< pipeline.git.tag >>
+          notify_slack: << pipeline.parameters.notify_slack >>
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              ignore: /.*/
+          context:
+            - hmpps-reporting-common
+            - hmpps-reporting-orb
