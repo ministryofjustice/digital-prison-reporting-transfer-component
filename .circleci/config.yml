@@ -47,6 +47,7 @@ workflows:
           context:
             - hmpps-reporting-common
             - hmpps-reporting-orb
+
       - reporting/aws_invoke_lambda:
           name: "Operational DataStore Migrations"
           function: dpr-transfer-component-operational-datastore-function
