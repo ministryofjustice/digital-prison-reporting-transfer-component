@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@1.0.49
+  reporting: ministryofjustice/hmpps-reporting@dev:d9dd09a4489468c086f731280a560fa37a9476b7
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -29,7 +29,9 @@ workflows:
   checkout-build-publish:
     jobs:               
       - reporting/aws_invoke_lambda:
+          name: "Redshift Migrations"
           function: << pipeline.parameters.function >>
+          migrationDataStore: "redshift"
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>
@@ -46,7 +48,9 @@ workflows:
             - hmpps-reporting-common
             - hmpps-reporting-orb
       - reporting/aws_invoke_lambda:
+          name: "Operational DataStore Migrations"
           function: dpr-transfer-component-operational-datastore-function
+          migrationDataStore: "operationaldatastore"
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>
