@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:f01526ee9aaf3c93514ec07011db8662eb926e32
+  reporting: ministryofjustice/hmpps-reporting@1.0.50
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -29,11 +29,32 @@ workflows:
   checkout-build-publish:
     jobs:               
       - reporting/aws_invoke_lambda:
+          name: "Redshift Migrations"
           function: << pipeline.parameters.function >>
+          migrationDataStore: "redshift"
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>
           flywayArgs: ', "outOfOrder": true'
+          skip_flyway_validate: true
+          ref: << pipeline.git.branch >><< pipeline.git.tag >>
+          notify_slack: << pipeline.parameters.notify_slack >>
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              ignore: /.*/
+          context:
+            - hmpps-reporting-common
+            - hmpps-reporting-orb
+
+      - reporting/aws_invoke_lambda:
+          name: "Operational DataStore Migrations"
+          function: dpr-transfer-component-operational-datastore-function
+          migrationDataStore: "operationaldatastore"
+          is_mock: false
+          test_ready: << pipeline.parameters.test_ready >>
+          preprod_ready: << pipeline.parameters.preprod_ready >>
           skip_flyway_validate: true
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
           notify_slack: << pipeline.parameters.notify_slack >>
