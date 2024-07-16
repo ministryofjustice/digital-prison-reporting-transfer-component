@@ -30,7 +30,6 @@ workflows:
           flyway_components: "redshift, operationaldatastore"
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
-          preprod_ready: << pipeline.parameters.preprod_ready >>
           flywayArgs: ', "outOfOrder": true'
           skip_flyway_validate: true
           ref: << pipeline.git.branch >><< pipeline.git.tag >>
