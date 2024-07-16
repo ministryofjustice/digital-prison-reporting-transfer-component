@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:658696d307bfd64eb7397995fc3fec1d894177f2
+  reporting: ministryofjustice/hmpps-reporting@dev:37fbf4deaf01a313f99fba82afd12871f0db08bd
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -20,10 +20,6 @@ parameters:
     type: boolean
     default: true
     description: Deploy to Test Environment
-  preprod_ready:
-    type: boolean
-    default: false
-    description: Deploy to PreProd Environment, OBSOLETE
 
 workflows:
   checkout-build-publish:
@@ -31,7 +27,7 @@ workflows:
       - reporting/aws_invoke_lambda:
           name: "Flyway Lambda Migrations"
           function: << pipeline.parameters.function >>
-          flyway_components: "redshift, ods"
+          flyway_components: "redshift, operationaldatastore"
           is_mock: false
           test_ready: << pipeline.parameters.test_ready >>
           preprod_ready: << pipeline.parameters.preprod_ready >>
