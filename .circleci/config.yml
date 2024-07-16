@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  reporting: ministryofjustice/hmpps-reporting@dev:37fbf4deaf01a313f99fba82afd12871f0db08bd
+  reporting: ministryofjustice/hmpps-reporting@dev:c50e65e2abc670d35b0f8f395f622373f6d81966
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -23,7 +23,7 @@ parameters:
 
 workflows:
   checkout-build-publish:
-    jobs:               
+    jobs:
       - reporting/aws_invoke_lambda:
           name: "Flyway Lambda Migrations"
           function: << pipeline.parameters.function >>
