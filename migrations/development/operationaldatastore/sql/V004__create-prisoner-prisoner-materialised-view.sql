@@ -7,56 +7,56 @@ CREATE SCHEMA IF NOT EXISTS domain;
 DROP MATERIALIZED VIEW IF EXISTS domain.prisoner_prisoner;
 
 CREATE MATERIALIZED VIEW domain.prisoner_prisoner AS
-WITH ofrel AS (SELECT row_number() over (partition by nomis.offender_profile_details.offender_book_id) as rn,
-                      nomis.offender_profile_details.offender_book_id,
-                      nomis.offender_profile_details.profile_code,
-                      nomis.profile_codes.description
-               FROM nomis.offender_profile_details
-                        LEFT JOIN nomis.profile_codes ON nomis.profile_codes.profile_code =
-                                                         nomis.offender_profile_details.profile_code
-               where nomis.offender_profile_details.profile_type = 'RELF'),
+WITH ofrel AS (SELECT row_number() over (partition by prisons.nomis_offender_profile_details.offender_book_id) as rn,
+                      prisons.nomis_offender_profile_details.offender_book_id,
+                      prisons.nomis_offender_profile_details.profile_code,
+                      prisons.nomis_profile_codes.description
+               FROM prisons.nomis_offender_profile_details
+                        LEFT JOIN prisons.nomis_profile_codes ON prisons.nomis_profile_codes.profile_code =
+                                                         prisons.nomis_offender_profile_details.profile_code
+               where prisons.nomis_offender_profile_details.profile_type = 'RELF'),
      pnc AS (SELECT *, row_number() over (partition by offender_id order by offender_id_seq) as rn
-             FROM nomis.offender_identifiers
-             where nomis.offender_identifiers.identifier_type = 'PNC'),
-     prim_lang AS (SELECT * FROM nomis.offender_languages WHERE language_type = 'PRIM'),
+             FROM prisons.nomis_offender_identifiers
+             where prisons.nomis_offender_identifiers.identifier_type = 'PNC'),
+     prim_lang AS (SELECT * FROM prisons.nomis_offender_languages WHERE language_type = 'PRIM'),
      sec_lang AS (SELECT *, row_number() over (partition by offender_book_id) as rn
-                  FROM nomis.offender_languages
+                  FROM prisons.nomis_offender_languages
                   WHERE language_type = 'SEC'),
      latest_sentence AS (SELECT *, row_number() over (partition by offender_book_id order by end_date desc) as rn
-                         from nomis.offender_sentence_terms),
+                         from prisons.nomis_offender_sentence_terms),
      ethnicity_domain AS (SELECT code, domain, description
-                          from nomis.reference_codes
+                          from prisons.nomis_reference_codes
                           where domain = 'ETHNICITY'),
      nationality_info AS (select row_number() over (partition by offender_book_id) as rn,
                                  offender_book_id,
-                                 nomis.profile_codes.profile_code                  as code,
-                                 nomis.profile_codes.description
-                          from nomis.offender_profile_details
-                                   left join nomis.profile_codes
-                                             on nomis.offender_profile_details.profile_code =
-                                                nomis.profile_codes.profile_code
-                          where nomis.offender_profile_details.profile_type = 'NAT'),
-     gender_domain AS (SELECT code, domain, description from nomis.reference_codes where domain = 'SEX'),
+                                 prisons.nomis_profile_codes.profile_code                  as code,
+                                 prisons.nomis_profile_codes.description
+                          from prisons.nomis_offender_profile_details
+                                   left join prisons.nomis_profile_codes
+                                             on prisons.nomis_offender_profile_details.profile_code =
+                                                prisons.nomis_profile_codes.profile_code
+                          where prisons.nomis_offender_profile_details.profile_type = 'NAT'),
+     gender_domain AS (SELECT code, domain, description from prisons.nomis_reference_codes where domain = 'SEX'),
      diet_info AS (select row_number() over (partition by offender_book_id) as rn,
                           offender_book_id,
-                          nomis.profile_codes.profile_code                  as code,
-                          nomis.profile_codes.description
-                   from nomis.offender_profile_details
-                            left join nomis.profile_codes
-                                      on nomis.offender_profile_details.profile_code =
-                                         nomis.profile_codes.profile_code
-                   where nomis.offender_profile_details.profile_type = 'DIET'),
+                          prisons.nomis_profile_codes.profile_code                  as code,
+                          prisons.nomis_profile_codes.description
+                   from prisons.nomis_offender_profile_details
+                            left join prisons.nomis_profile_codes
+                                      on prisons.nomis_offender_profile_details.profile_code =
+                                         prisons.nomis_profile_codes.profile_code
+                   where prisons.nomis_offender_profile_details.profile_type = 'DIET'),
      latest_category AS (SELECT *, row_number() over (partition by offender_book_id order by assessment_date desc) as rn
-                         from nomis.offender_assessments),
+                         from prisons.nomis_offender_assessments),
      sexo_info
-         AS (select row_number() over (partition by nomis.offender_profile_details.offender_book_id) as rn,
+         AS (select row_number() over (partition by prisons.nomis_offender_profile_details.offender_book_id) as rn,
                     offender_book_id,
-                    nomis.profile_codes.profile_code                                                 as code,
-                    nomis.profile_codes.description
-             from nomis.offender_profile_details
-                      left join nomis.profile_codes on nomis.offender_profile_details.profile_code =
-                                                       nomis.profile_codes.profile_code
-             where nomis.offender_profile_details.profile_type = 'SEXO')
+                    prisons.nomis_profile_codes.profile_code                                                 as code,
+                    prisons.nomis_profile_codes.description
+             from prisons.nomis_offender_profile_details
+                      left join prisons.nomis_profile_codes on prisons.nomis_offender_profile_details.profile_code =
+                                                       prisons.nomis_profile_codes.profile_code
+             where prisons.nomis_offender_profile_details.profile_type = 'SEXO')
 SELECT o.offender_id_display                                  AS number,
        ob.offender_book_id                                    AS id,
        o.offender_id                                          AS offender_id,
@@ -100,8 +100,8 @@ SELECT o.offender_id_display                                  AS number,
        diet_info.description                                  AS diet,
        sexo_info.code                                         AS sex_orientation_code,
        sexo_info.description                                  AS sex_orientation
-FROM nomis.offenders o
-         JOIN nomis.offender_bookings ob ON o.offender_id = ob.offender_id
+FROM prisons.nomis_offenders o
+         JOIN prisons.nomis_offender_bookings ob ON o.offender_id = ob.offender_id
          LEFT JOIN ofrel ON ofrel.offender_book_id = ob.offender_book_id AND ofrel.rn = 1
          LEFT JOIN pnc ON pnc.offender_id = o.offender_id AND pnc.rn = 1
          LEFT JOIN prim_lang ON prim_lang.offender_book_id = ob.offender_book_id

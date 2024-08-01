@@ -1,4 +1,4 @@
-CREATE TABLE nomis.offenders
+CREATE TABLE prisons.nomis_offenders
 (
     offender_id                   numeric(10, 0),
     offender_name_seq             numeric(38, 0),
@@ -49,7 +49,7 @@ CREATE TABLE nomis.offenders
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.offender_bookings
+CREATE TABLE prisons.nomis_offender_bookings
 (
     offender_book_id              numeric(10, 0),
     booking_begin_date            timestamp,
@@ -110,7 +110,7 @@ CREATE TABLE nomis.offender_bookings
     admission_reason              text
 );
 
-CREATE TABLE nomis.offender_profile_details
+CREATE TABLE prisons.nomis_offender_profile_details
 (
     offender_book_id              numeric(10, 0),
     profile_seq                   integer,
@@ -132,7 +132,7 @@ CREATE TABLE nomis.offender_profile_details
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.profile_codes
+CREATE TABLE prisons.nomis_profile_codes
 (
     profile_type                  text,
     profile_code                  text,
@@ -156,7 +156,7 @@ CREATE TABLE nomis.profile_codes
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.offender_identifiers
+CREATE TABLE prisons.nomis_offender_identifiers
 (
     offender_id                   numeric(10, 0),
     offender_id_seq               numeric(10, 0),
@@ -180,7 +180,7 @@ CREATE TABLE nomis.offender_identifiers
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.offender_languages
+CREATE TABLE prisons.nomis_offender_languages
 (
     offender_book_id              numeric(10, 0),
     language_type                 text,
@@ -206,7 +206,7 @@ CREATE TABLE nomis.offender_languages
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.offender_sentence_terms
+CREATE TABLE prisons.nomis_offender_sentence_terms
 (
     offender_book_id              numeric(10, 0),
     sentence_seq                  integer,
@@ -233,7 +233,7 @@ CREATE TABLE nomis.offender_sentence_terms
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.reference_codes
+CREATE TABLE prisons.nomis_reference_codes
 (
     domain                        text,
     code                          text,
@@ -258,7 +258,7 @@ CREATE TABLE nomis.reference_codes
     audit_additional_info         text
 );
 
-CREATE TABLE nomis.offender_assessments
+CREATE TABLE prisons.nomis_offender_assessments
 (
     offender_book_id              numeric(10, 0),
     assessment_seq                integer,
