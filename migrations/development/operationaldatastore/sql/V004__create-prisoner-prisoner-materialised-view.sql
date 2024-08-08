@@ -103,5 +103,3 @@ FROM prisons.nomis_offenders o
          LEFT JOIN diet_info ON ob.offender_book_id = diet_info.offender_book_id AND diet_info.rn = 1
          LEFT JOIN latest_category ON latest_category.offender_book_id = ob.offender_book_id AND latest_category.rn = 1
          LEFT JOIN sexo_info ON ob.offender_book_id = sexo_info.offender_book_id AND sexo_info.rn = 1;
-
-
