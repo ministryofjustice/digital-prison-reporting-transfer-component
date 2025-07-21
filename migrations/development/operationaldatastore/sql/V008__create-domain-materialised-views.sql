@@ -35,7 +35,7 @@ SELECT p.prison_id,
         where cat.prison_id = p.prison_id) as categories,
        (SELECT string_agg(o.name, ', ' ORDER BY o.name)
         FROM prisons.prisonregister_prison_operator op
-                 JOIN prisons.prisonregister_operator o on o.id = op.operator_id
+        JOIN prisons.prisonregister_operator o on o.id = op.operator_id
         WHERE op.prison_id = p.prison_id)  as operators
 FROM prisons.prisonregister_prison p;
 
@@ -54,7 +54,7 @@ SELECT sm.staff_id,
        aua.working_caseload_id as active_caseload_id,
        sm.status                  account_status
 FROM prisons.nomis_staff_members sm
-         JOIN prisons.nomis_staff_user_accounts aua ON sm.staff_id = aua.staff_id;
+JOIN prisons.nomis_staff_user_accounts aua ON sm.staff_id = aua.staff_id;
 
 -- =================================================================
 -- person.prisoner
@@ -73,13 +73,13 @@ SELECT o.offender_id_display as prisoner_number,
        i.description         as cell_location,
        l.id                  as location_uuid
 FROM prisons.nomis_offender_bookings ob
-         INNER JOIN prisons.nomis_offenders o
-                    ON ob.offender_id = o.offender_id AND ob.booking_seq = 1
-         LEFT JOIN prisons.nomis_agency_internal_locations i
-                   ON ob.living_unit_id = i.internal_location_id
-         LEFT JOIN prisons.locationsinsideprison_location l
-                   ON l.prison_id = ob.agy_loc_id
-                       AND concat(l.prison_id, concat('-', l.path_hierarchy)) = i.description;
+INNER JOIN prisons.nomis_offenders o
+    ON ob.offender_id = o.offender_id AND ob.booking_seq = 1
+LEFT JOIN prisons.nomis_agency_internal_locations i
+    ON ob.living_unit_id = i.internal_location_id
+LEFT JOIN prisons.locationsinsideprison_location l
+    ON l.prison_id = ob.agy_loc_id
+    AND concat(l.prison_id, concat('-', l.path_hierarchy)) = i.description;
 
 
 -- =================================================================
@@ -89,7 +89,11 @@ FROM prisons.nomis_offender_bookings ob
 CREATE SCHEMA regional;
 
 CREATE MATERIALIZED VIEW regional.area AS
-SELECT area_class, area_code, description, parent_area_code, active_flag
+SELECT area_class,
+       area_code,
+       description,
+       parent_area_code,
+       active_flag
 FROM prisons.nomis_areas;
 
 -- =================================================================

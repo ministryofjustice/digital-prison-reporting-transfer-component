@@ -6,7 +6,7 @@ SELECT cron.schedule ('refresh establishment.establishment','15 2 * * *','REFRES
 CREATE UNIQUE INDEX establishment_prison_prison_id_key ON establishment.prison(prison_id);
 SELECT cron.schedule ('refresh establishment.prison','30 2 * * *','REFRESH MATERIALIZED VIEW CONCURRENTLY establishment.prison');
 
-CREATE UNIQUE INDEX staff_staff_staff_id_key ON staff.staff(staff_id);
+CREATE UNIQUE INDEX staff_staff_username_key ON staff.staff(username);
 SELECT cron.schedule ('refresh staff.staff','45 2 * * *','REFRESH MATERIALIZED VIEW CONCURRENTLY staff.staff');
 
 CREATE UNIQUE INDEX person_prisoner_offender_id_display_key ON person.prisoner(prisoner_number);
