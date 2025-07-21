@@ -1,6 +1,6 @@
 -- Nomis
 
-CREATE TABLE prisons.nomis_areas
+CREATE TABLE IF NOT EXISTS prisons.nomis_areas
 (
     area_class                    text,
     area_code                     text,
@@ -23,7 +23,7 @@ CREATE TABLE prisons.nomis_areas
     audit_additional_info         text
 );
 
-CREATE TABLE prisons.nomis_agency_locations
+CREATE TABLE IF NOT EXISTS prisons.nomis_agency_locations
 (
     agy_loc_id                    text,
     description                   text,
@@ -73,7 +73,7 @@ CREATE TABLE prisons.nomis_agency_locations
     payroll_region                text
 );
 
-CREATE TABLE prisons.nomis_agency_internal_locations
+CREATE TABLE IF NOT EXISTS prisons.nomis_agency_internal_locations
 (
     internal_location_id          numeric(10, 0),
     internal_location_code        text,
@@ -110,7 +110,7 @@ CREATE TABLE prisons.nomis_agency_internal_locations
     audit_additional_info         text
 );
 
-CREATE TABLE prisons.nomis_staff_members
+CREATE TABLE IF NOT EXISTS prisons.nomis_staff_members
 (
     staff_id                      numeric(10, 0),
     assigned_caseload_id          text,
@@ -162,7 +162,7 @@ CREATE TABLE prisons.nomis_staff_members
     national_insurance_number     text
 );
 
-CREATE TABLE prisons.nomis_staff_user_accounts
+CREATE TABLE IF NOT EXISTS prisons.nomis_staff_user_accounts
 (
     username                      text,
     staff_id                      numeric(10, 0),
@@ -187,14 +187,14 @@ CREATE TABLE prisons.nomis_staff_user_accounts
 
 -- DPS Locations Inside Prison
 
-CREATE TABLE prisons.locationsinsideprison_location
+CREATE TABLE IF NOT EXISTS prisons.locationsinsideprison_location
 (
-    id                              uuid,
+    id                              text,
     prison_id                       text,
     path_hierarchy                  text,
     code                            text,
     location_type                   text,
-    parent_id                       uuid,
+    parent_id                       text,
     local_name                      text,
     comments                        text,
     order_within_parent_location    integer,
@@ -225,32 +225,32 @@ CREATE TABLE prisons.locationsinsideprison_location
 
 -- DPS Prison Register
 
-CREATE TABLE prisons.prisonregister_prison_type
+CREATE TABLE IF NOT EXISTS prisons.prisonregister_prison_type
 (
     id        integer,
     prison_id text,
     type      text
 );
 
-CREATE TABLE prisons.prisonregister_prison_category
+CREATE TABLE IF NOT EXISTS prisons.prisonregister_prison_category
 (
     category  text,
     prison_id text
 );
 
-CREATE TABLE prisons.prisonregister_prison_operator
+CREATE TABLE IF NOT EXISTS prisons.prisonregister_prison_operator
 (
     prison_id   text,
     operator_id text
 );
 
-CREATE TABLE prisons.prisonregister_operator
+CREATE TABLE IF NOT EXISTS prisons.prisonregister_operator
 (
     id   integer,
     name text
 );
 
-CREATE TABLE prisons.prisonregister_prison
+CREATE TABLE IF NOT EXISTS prisons.prisonregister_prison
 (
     prison_id            text,
     name                 text,
@@ -278,4 +278,5 @@ VALUES ('nomis', 'areas'),
        ('prisonregister', 'prison_category'),
        ('prisonregister', 'prison_operator'),
        ('prisonregister', 'operator'),
-       ('prisonregister', 'prison');
+       ('prisonregister', 'prison')
+ON CONFLICT DO NOTHING;
