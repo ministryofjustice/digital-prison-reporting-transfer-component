@@ -18,8 +18,6 @@ FROM prisons.nomis_agency_locations;
 -- establishment.prison
 -- =================================================================
 
-CREATE SCHEMA establishment;
-
 CREATE MATERIALIZED VIEW establishment.prison AS
 SELECT p.prison_id,
        p.name,
