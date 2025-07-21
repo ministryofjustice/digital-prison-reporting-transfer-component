@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS prisons.prisonregister_prison_category
 CREATE TABLE IF NOT EXISTS prisons.prisonregister_prison_operator
 (
     prison_id   text,
-    operator_id text
+    operator_id integer
 );
 
 CREATE TABLE IF NOT EXISTS prisons.prisonregister_operator
