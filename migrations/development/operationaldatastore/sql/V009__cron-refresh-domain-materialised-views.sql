@@ -15,5 +15,5 @@ SELECT cron.schedule ('refresh person.prisoner','0 3 * * *','REFRESH MATERIALIZE
 CREATE UNIQUE INDEX regional_area_area_code_key ON regional.area(area_code);
 SELECT cron.schedule ('refresh regional.area','15 3 * * *','REFRESH MATERIALIZED VIEW CONCURRENTLY regional.area');
 
-CREATE UNIQUE INDEX external_location_id_key ON external.location(id);
-SELECT cron.schedule ('refresh external.location','30 3 * * *','REFRESH MATERIALIZED VIEW CONCURRENTLY external.location');
+CREATE UNIQUE INDEX external_locations_id_key ON external.locations(id);
+SELECT cron.schedule ('refresh external.locations','30 3 * * *','REFRESH MATERIALIZED VIEW CONCURRENTLY external.locations');

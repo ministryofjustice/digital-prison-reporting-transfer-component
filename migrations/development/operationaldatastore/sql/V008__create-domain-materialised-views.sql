@@ -97,11 +97,12 @@ SELECT area_class,
 FROM prisons.nomis_areas;
 
 -- =================================================================
--- external.location
+-- external.locations
 -- =================================================================
 
 CREATE SCHEMA external;
-CREATE MATERIALIZED VIEW external.location AS
+
+CREATE MATERIALIZED VIEW external.locations AS
 SELECT agy_loc_id           as id,
        description          as name,
        agency_location_type as agency_type,
