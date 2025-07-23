@@ -34,19 +34,19 @@ GRANT USAGE ON SCHEMA external TO dpruser;
 -- =================================================================
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA establishment
-    GRANT SELECT ON TABLES TO dpr_user;
+    GRANT SELECT ON TABLES TO dpruser;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA staff
-    GRANT SELECT ON TABLES TO dpr_user;
+    GRANT SELECT ON TABLES TO dpruser;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA person
-    GRANT SELECT ON TABLES TO dpr_user;
+    GRANT SELECT ON TABLES TO dpruser;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA regional
-    GRANT SELECT ON TABLES TO dpr_user;
+    GRANT SELECT ON TABLES TO dpruser;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA external
-    GRANT SELECT ON TABLES TO dpr_user;
+    GRANT SELECT ON TABLES TO dpruser;
 
 -- =================================================================
 -- Create views
