@@ -1,4 +1,4 @@
-create schema if not exists domainprisoner_testing;
+create schema if not exists prisoner;
 
 create materialized view prisoner.prisoner as
 with offender_latest_booking as (
