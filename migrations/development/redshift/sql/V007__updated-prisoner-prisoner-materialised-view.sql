@@ -97,7 +97,7 @@ secondary_language as (
      -- aggregated into 1 row per offender_book_id
      select
          offender_book_id,
-         array_agg(distinct language_code order by language_code) filter ( where language_code is not null ) as language_codes
+         split_to_array(listagg(distinct language_code, ',') WITHIN GROUP (ORDER BY language_code)) as language_codes
      from prisons.nomis_offender_languages
      where language_type = 'SEC'
      group by offender_book_id
