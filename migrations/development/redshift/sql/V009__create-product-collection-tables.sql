@@ -7,5 +7,5 @@ CREATE TABLE product_.product_collection (
 CREATE TABLE product_.product_collection_products (
   product_collection_id VARCHAR SORTKEY NOT NULL,
   product_id VARCHAR NOT NULL,
-  FOREIGN KEY(product_collection_id) REFERENCES product_collection(id)
+  FOREIGN KEY(product_collection_id) REFERENCES product_.product_collection(id)
 );
