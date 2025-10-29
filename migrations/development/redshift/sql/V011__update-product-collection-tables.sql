@@ -1,6 +1,6 @@
-DROP TABLE product_.product_collection_products;
-DROP TABLE product_.product_collection;
 DROP TABLE product_.product_collection_attributes;
+DROP TABLE product_.product_collection_products;
+DROP TABLE product_.product_collection CASCADE;
 
 CREATE TABLE product_.product_collection (
   id VARCHAR NOT NULL,
