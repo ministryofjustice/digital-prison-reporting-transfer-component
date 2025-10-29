@@ -21,4 +21,4 @@ CREATE TABLE product_.product_collection_attributes (
   attribute_name VARCHAR NOT NULL,
   attribute_value VARCHAR NOT NULL,
   FOREIGN KEY(product_collection_id) REFERENCES product_.product_collection(id)
-) DISTSTYLE KEY DISTKEY(id);
+) DISTSTYLE KEY DISTKEY(product_collection_id);
