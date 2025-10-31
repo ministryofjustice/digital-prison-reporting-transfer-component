@@ -1,0 +1,1 @@
+ALTER TABLE prisons.locationsinsideprison_location ADD COLUMN internal_movement_allowed boolean;
