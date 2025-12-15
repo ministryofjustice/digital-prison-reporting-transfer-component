@@ -1,0 +1,3 @@
+GRANT USAGE ON SCHEMA prison_domains TO dpruser;
+ALTER DEFAULT PRIVILEGES IN SCHEMA prison_domains
+    GRANT SELECT ON TABLES TO dpruser;
