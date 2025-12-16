@@ -1,0 +1,5 @@
+-- For domains related to prisoner
+CREATE SCHEMA IF NOT EXISTS prisoner QUOTA UNLIMITED;
+GRANT USAGE ON SCHEMA prisoner TO dpruser;
+ALTER DEFAULT PRIVILEGES IN SCHEMA prisoner
+    GRANT SELECT ON TABLES TO dpruser;
