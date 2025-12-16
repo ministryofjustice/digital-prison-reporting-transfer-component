@@ -1,15 +1,15 @@
 CREATE OR REPLACE VIEW prison_domains.supportforadditionalneeds_prisoner_challenges_and_conditions AS
 WITH base AS (SELECT cp.prisoner_number AS prison_number,
                      cp.prison_id       AS current_location,
-                     'TBC'              as sex_code,
+                     cp.sex_code,
                      cp.first_name,
                      cp.last_name,
                      cp.date_of_birth   as birth_date,
                      ov.has_need,
                      ov.has_aln_need,
                      ov.has_ldd_need
-              FROM datamart.person.prisoner AS cp
-                       LEFT JOIN "datamart"."san_prisoner_overview" ov
+              FROM datamart.prisoner.profile AS cp
+                       LEFT JOIN datamart.prison_domains."supportforadditionalneeds_prisoner_overview" ov
                                  ON cp.prisoner_number = ov.prison_number
               WHERE cp.prison_id NOT in ('OUT', 'ZZGHI')),
      ref AS (SELECT r.id   AS condition_id,
@@ -34,11 +34,15 @@ WITH base AS (SELECT cp.prisoner_number AS prison_number,
      cond AS (SELECT c.prison_number,
                      c.condition_type_id
               FROM "prisons"."supportforadditionalneeds_condition" c
-              WHERE c.active = TRUE),
+              WHERE c.active = TRUE
+--      AND c.__current = TRUE
+     ),
      challenge AS (SELECT ch.prison_number,
                           ch.challenge_type_id
                    FROM "prisons"."supportforadditionalneeds_challenge" ch
-                   WHERE ch.active = TRUE),
+                   WHERE ch.active = TRUE
+--      AND ch.__current = TRUE
+     ),
      conditions_pivot AS (SELECT c.prison_number,
                                  -- max updated to work with integer
                                  MAX(CASE WHEN r.condition_code = 'PHYSICAL_OTHER' THEN TRUE::INTEGER END) AS conditions_restricting_mobility_dexterity,
