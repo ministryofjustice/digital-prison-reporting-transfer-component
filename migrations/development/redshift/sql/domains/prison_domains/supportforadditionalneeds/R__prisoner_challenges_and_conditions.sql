@@ -1,7 +1,7 @@
 /* 13/01/2025 Version 2 replace 1/0 and include N/A instead of NULLS for has_need, has_aln_need, has_ldd_need columns.
  * cell location and ethnicity description
  */
-CREATE OR REPLACE VIEW "supportforadditionalneeds_prisoner_challenges_and_conditions" AS
+CREATE OR REPLACE VIEW prison_domains.supportforadditionalneeds_prisoner_challenges_and_conditions AS
 WITH base AS (SELECT cp.prisoner_number AS prison_number,
                      cp.prison_id       AS current_location,
                      cp.gender_code     as sex_code,
