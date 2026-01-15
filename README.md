@@ -8,3 +8,6 @@ This requires `flyway-lambda` to be deployed on Relevant AWS Account
 
 ## Migrations execution
 TBC, managed by CircleCI `.circleci/config.yml`
+
+
+## Testing
