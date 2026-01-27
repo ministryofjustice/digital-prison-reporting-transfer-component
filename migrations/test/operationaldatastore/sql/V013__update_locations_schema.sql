@@ -1,3 +1,2 @@
 ALTER TABLE prisons.locationsinsideprison_location DROP COLUMN certification_id;
-ALTER TABLE prisons.locationsinsideprison_location ADD COLUMN internal_movement_allowed boolean;
 ALTER TABLE prisons.locationsinsideprison_location ADD COLUMN certified_cell boolean;
