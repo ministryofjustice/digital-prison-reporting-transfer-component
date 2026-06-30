@@ -1,0 +1,33 @@
+DROP TABLE product_.lao_crns;
+
+DROP TABLE product_.lao_exclusions;
+
+DROP TABLE product_.lao_restrictions;
+
+CREATE TABLE
+  product_.lao_crns (
+    id TEXT PRIMARY KEY,
+    crn TEXT DISTKEY SORTKEY,
+    version INTEGER,
+    last_updated TIMESTAMP
+  ) DISTSTYLE KEY;
+
+CREATE TABLE
+  product_.lao_exclusions (
+    crn_user_id TEXT PRIMARY KEY,
+    crn TEXT DISTKEY,
+    user_id TEXT,
+    reason TEXT,
+    since TIMESTAMPTZ,
+    until TIMESTAMPTZ
+  ) DISTSTYLE KEY COMPOUND SORTKEY (crn, crn_user_id);
+
+CREATE TABLE
+  product_.lao_restrictions (
+    crn_user_id TEXT PRIMARY KEY,
+    crn TEXT DISTKEY,
+    user_id TEXT,
+    reason TEXT,
+    since TIMESTAMPTZ,
+    until TIMESTAMPTZ
+  ) DISTSTYLE KEY COMPOUND SORTKEY (crn, crn_user_id);
