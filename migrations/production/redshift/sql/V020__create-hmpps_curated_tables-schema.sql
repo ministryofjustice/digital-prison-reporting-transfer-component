@@ -16,3 +16,4 @@ database 'prisons'
 iam_role 'arn:aws:iam::004723187462:role/dpr-redshift-spectrum-role';
 
 GRANT USAGE ON SCHEMA hmpps_curated_tables TO dpruser;
+GRANT USAGE ON SCHEMA hmpps_curated_tables TO probation_mi_app;
