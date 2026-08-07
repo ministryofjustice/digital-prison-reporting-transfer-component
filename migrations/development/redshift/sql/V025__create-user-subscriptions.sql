@@ -1,4 +1,4 @@
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
   subscription_.user_subscription (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
